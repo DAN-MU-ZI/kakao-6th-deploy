@@ -24,7 +24,6 @@ public class CartService {
 
     @Transactional
     public void addCartList(List<CartRequest.SaveDTO> requestDTOs, User sessionUser) {
-        System.out.println("중복요청 검사");
         List<Integer> numList = requestDTOs.stream()
                 .map(x->x.getOptionId())
                 .collect(Collectors.toList());
@@ -36,21 +35,18 @@ public class CartService {
             throw new Exception400("잘못된 요청입니다.");
         }
 
-        System.out.println("요청값 유효성 검사");
         if (requestDTOs.stream()
                 .filter(x->x.getOptionId()<=0 | x.getQuantity()<=0)
                 .collect(Collectors.toList()).size()!=0) {
             throw new Exception400("잘못된 요청입니다.");
         }
 
-        System.out.println("옵션 유효성 검사");
 //        List<Option> options = new ArrayList<>();
         List<Option> options = requestDTOs.stream().map(x-> {
             Option option = optionJPARepository.findById(x.getOptionId())
                     .orElseThrow(() -> new Exception400("잘못된 요청입니다."));
             return option;
         }).collect(Collectors.toList());
-        System.out.println("잘못된 요청 검사");
         List<Integer> distinctProductIds = options.stream()
                 .map(option -> option.getProduct().getId())
                 .distinct()
@@ -59,16 +55,15 @@ public class CartService {
             throw  new Exception400("중복되지않는 제품입니다.");
         }
 
-        System.out.println("잘못된 요청 검사");
         requestDTOs.forEach(requestDTO -> {
             int optionId = requestDTO.getOptionId();
             int quantity = requestDTO.getQuantity();
+            System.out.println("옵션 : " + optionId);
             Option option = optionJPARepository.findById(optionId)
                     .orElseThrow(() -> new Exception404("해당 옵션을 찾을 수 없습니다. : " + optionId));
 
             // 장바구니에 담겼는지 확인하는 로직
-            System.out.println("기존 장바구니 검색");
-            Cart prevCart = cartJPARepository.findById(optionId).orElse(null);
+            Cart prevCart = cartJPARepository.findByOptionIdAndUserId(optionId, sessionUser.getId()).orElse(null);
             if (prevCart == null) {
                 int price = option.getPrice() * quantity;
                 Cart cart = Cart.builder()
@@ -79,7 +74,6 @@ public class CartService {
                         .build();
                 cartJPARepository.save(cart);
             } else {
-                System.out.println("중복 장바구니 갱신");
                 int updatedQuantity = quantity + prevCart.getQuantity();
                 int price = option.getPrice() * updatedQuantity;
 

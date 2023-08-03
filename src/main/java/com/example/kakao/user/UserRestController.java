@@ -2,6 +2,9 @@ package com.example.kakao.user;
 
 import com.example.kakao._core.security.JWTProvider;
 import com.example.kakao._core.utils.ApiUtils;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;

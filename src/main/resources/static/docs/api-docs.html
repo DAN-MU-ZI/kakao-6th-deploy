@@ -1315,13 +1315,47 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_주문_실패_예시">주문 실패 예시</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>장바구니가 비어있다면 주문할 수 없다.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_요청_예시_22">요청 예시</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /orders/save HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_예시_22">응답 예시</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code>{
+  "success" : false,
+  "response" : null,
+  "error" : {
+    "message" : "잘못된 요청입니다.",
+    "status" : 400
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2023-08-01 01:19:46 +0900
+Last updated 2023-08-03 12:03:41 +0900
 </div>
 </div>
 </body>
